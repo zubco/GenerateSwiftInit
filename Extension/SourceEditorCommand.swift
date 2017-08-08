@@ -31,8 +31,13 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             guard let line = untypedLine as? String else { return nil }
             return lineNumbers.contains(lineNumber) ? line : nil
         }
-
-        let initializer = SwiftGenerator.generateInit(lines: lines)
+        
+        let initializer = SwiftGenerator.generateInit(
+            lines: lines,
+            tabWidth: invocation.buffer.tabWidth,
+            indentationWidth: invocation.buffer.indentationWidth,
+            usesTabs: invocation.buffer.usesTabsForIndentation
+        )
         invocation.buffer.lines.insert(initializer, at: lineNumbers.upperBound.advanced(by: 1))
 
         completionHandler(nil)

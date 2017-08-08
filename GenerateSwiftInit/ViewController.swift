@@ -18,7 +18,7 @@ class ViewController: NSViewController {
     @IBAction func generate(_ sender: AnyObject) {
         guard let lines = inputTextView.string else { return }
 
-        let initializer = generateInit(lines: lines.components(separatedBy: "\n"))
+        let initializer = generateInit(lines: lines.components(separatedBy: "\n"), tabWidth: 4, indentationWidth: 4, usesTabs: false)
 
         outputTextView.string = initializer
     }

@@ -28,8 +28,10 @@ private struct Match {
     }
 }
 
-public func generateInit(lines: [String]) -> String {
-
+public func generateInit(lines: [String], tabWidth: Int, indentationWidth: Int, usesTabs: Bool) -> String {
+    let indentation = usesTabs ? "\t" : String(repeating: " ", count: indentationWidth)
+    let doubleIndentation = String(repeating: indentation, count: 2)
+    
     let results = lines.flatMap { line -> Match? in
         let range = NSRange(location: 0, length: line.utf8.count)
         let matches = regex.matches(in: line, options: [], range: range)
@@ -52,9 +54,6 @@ public func generateInit(lines: [String]) -> String {
 
     let paramString = results.map { $0.paramString }.joined(separator: ", ")
 
-    // TODO: correct indent
-    let valueInitializers = results.map { $0.valueInitializer }.joined(separator: "\n\t")
-
-    // TODO: correct indent
-    return "\ninit(\(paramString)) {\n\t\(valueInitializers)\n}\n"
+    let valueInitializers = results.map { $0.valueInitializer }.joined(separator: "\n\(doubleIndentation)")
+    return "\n\(indentation)init(\(paramString)) {\n\(doubleIndentation)\(valueInitializers)\n\(indentation)}\n"
 }
